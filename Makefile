@@ -1,24 +1,37 @@
 CC = clang
-CFLAGS = -Wall -Wextra -pedantic -std=gnu99 -D_FORTIFY_SOURCE=2 -O2
-TARGET = dmotd
+CFLAGS = -Wall -Wextra -pedantic -std=gnu99
+DFLAGS = -DDEBUG -O0 -g
+RFLAGS = -D_FORTIFY_SOURCE=2 -O2
+
+BUILDDIR = bin
+SRCDIR = src
+EXECUTABLE = dmotd
+TARGET = bin/$(EXECUTABLE)
 
 PREFIX := /usr/local
 
-SOURCES = $(wildcard *.c)
-OBJECTS = $(SOURCES:.c=.o)
+SOURCES = $(shell find $(SRCDIR) -name *.c)
+OBJECTS = $(SOURCES:%=$(BUILDDIR)/%.o)
 
-%.o: %.c
+debug: CFLAGS += $(DFLAGS)
+debug: $(TARGET)
+
+release: CFLAGS += $(RFLAGS)
+release: $(TARGET)
+	strip $^
+
+$(BUILDDIR)/%.c.o: %.c
+	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(TARGET): $(OBJECTS)
-	$(CC) -o $@ $<
-	strip $@
+	$(CC) -o $@ $^
 
 install:
 	install -Dm755 $(TARGET) '$(PREFIX)/bin'
 
 uninstall:
-	rm '$(PREFIX)/bin/$(TARGET)'
+	rm '$(PREFIX)/bin/$(EXECUTABLE)'
 
 clean:
 	rm -fv $(TARGET) $(OBJECTS)

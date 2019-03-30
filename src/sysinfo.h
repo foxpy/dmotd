@@ -1,0 +1,1 @@
+long get_uptime();
