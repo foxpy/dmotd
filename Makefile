@@ -11,6 +11,7 @@ TARGET = bin/$(EXECUTABLE)
 PREFIX := /usr/local
 
 SOURCES = $(shell find $(SRCDIR) -name *.c)
+HEADERS = $(shell find $(SRCDIR) -name *.h)
 OBJECTS = $(SOURCES:%=$(BUILDDIR)/%.o)
 
 debug: CFLAGS += $(DFLAGS)
@@ -20,7 +21,7 @@ release: CFLAGS += $(RFLAGS)
 release: $(TARGET)
 	strip $^
 
-$(BUILDDIR)/%.c.o: %.c
+$(BUILDDIR)/%.c.o: %.c $(HEADERS)
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -o $@ -c $<
 
