@@ -2,16 +2,19 @@
 #include <stdlib.h>
 
 #include "sysinfo.h"
+#include "config.h"
 
 int main(void)
 {
-	char motd[256];
-	char tmp[64];
-	if (uptime((char*) tmp, sizeof(tmp)) != EXIT_SUCCESS) {
+	char motd[LINES*LINE_SIZE];
+	char uptime_s[BUF_SIZE];
+
+	if (uptime((char*) uptime_s, sizeof(uptime_s)) != EXIT_SUCCESS) {
 		perror("uptime");
 		return EXIT_FAILURE;
 	}
-	snprintf((char*) motd, sizeof(motd), "Uptime: %s\n", tmp);
-	printf("%s", motd);
+
+	snprintf((char*) motd, sizeof(motd), MOTD_STRING, uptime_s);
+	puts(motd);
 	return EXIT_SUCCESS;
 }
