@@ -8,13 +8,23 @@ int main(void)
 {
 	char motd[LINES*LINE_SIZE];
 	char uptime_s[LINE_SIZE];
+	char loadavg_s[LINE_SIZE];
 
-	if (uptime((char*) uptime_s, sizeof(uptime_s)) != EXIT_SUCCESS) {
-		perror("uptime");
+	if (format_uptime((char*) uptime_s, sizeof(uptime_s))
+			!= EXIT_SUCCESS) {
+		perror("format_uptime");
 		return EXIT_FAILURE;
 	}
 
-	snprintf((char*) motd, sizeof(motd), MOTD_STRING, uptime_s);
+	if (format_loadavg((char*) loadavg_s, sizeof(loadavg_s))
+			!= EXIT_SUCCESS) {
+		perror("format_loadavg");
+		return EXIT_FAILURE;
+	}
+
+	snprintf((char*) motd, sizeof(motd), MOTD_STRING,
+			uptime_s,
+			loadavg_s);
 	puts(motd);
 	return EXIT_SUCCESS;
 }

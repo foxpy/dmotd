@@ -3,7 +3,7 @@
 #include <time.h>
 #include <sys/sysinfo.h>
 
-int uptime(char *dst, size_t len)
+int format_uptime(char *dst, size_t len)
 {
 	struct sysinfo info;
 	struct tm *dt;
@@ -24,5 +24,20 @@ int uptime(char *dst, size_t len)
 			dt->tm_hour,
 			dt->tm_min,
 			dt->tm_sec);
+	return EXIT_SUCCESS;
+}
+
+int format_loadavg(char *dst, size_t len)
+{
+	double loadavg[3];
+
+	if (getloadavg(loadavg, 3) != sizeof(loadavg)/sizeof(double)) {
+		return -1;
+	}
+
+	snprintf(dst, len, "%.2f, %.2f, %.2f",
+			loadavg[0],
+			loadavg[1],
+			loadavg[2]);
 	return EXIT_SUCCESS;
 }
