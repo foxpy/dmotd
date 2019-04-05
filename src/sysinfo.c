@@ -41,3 +41,17 @@ int format_loadavg(char *dst, size_t len)
 			loadavg[2]);
 	return EXIT_SUCCESS;
 }
+
+int format_memory(char *dst, size_t len)
+{
+	struct sysinfo info;
+
+	if (sysinfo(&info) != EXIT_SUCCESS) {
+		return -1;
+	}
+
+	snprintf(dst, len, "%ld/%ld MB",
+			(info.totalram - info.freeram)/1024/1024,
+			info.totalram/1024/1024);
+	return EXIT_SUCCESS;
+}
