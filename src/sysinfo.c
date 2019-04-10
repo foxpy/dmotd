@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <time.h>
 #include <sys/sysinfo.h>
 
@@ -45,13 +46,15 @@ int format_loadavg(char *dst, size_t len)
 int format_memory(char *dst, size_t len)
 {
 	struct sysinfo info;
+	int8_t used_percent;
 
 	if (sysinfo(&info) != EXIT_SUCCESS) {
 		return -1;
 	}
 
-	snprintf(dst, len, "%ld/%ld MB",
+	used_percent = (100 * (info.totalram - info.freeram)) / info.totalram;
+	snprintf(dst, len, "%ld/%ld MB [%d%%]",
 			(info.totalram - info.freeram)/1024/1024,
-			info.totalram/1024/1024);
+			info.totalram/1024/1024, used_percent);
 	return EXIT_SUCCESS;
 }
