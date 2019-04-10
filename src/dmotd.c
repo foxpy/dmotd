@@ -17,6 +17,7 @@ int main(void)
 	char loadavg_s[LINE_SIZE];
 	char memory_s[LINE_SIZE];
 	char pids_s[LINE_SIZE];
+	char storage_s[LINE_SIZE];
 
 	if (format_uptime((char*) uptime_s, sizeof(uptime_s))
 			!= EXIT_SUCCESS) {
@@ -38,11 +39,17 @@ int main(void)
 		fail("pids");
 	}
 
+	if (format_storage((char*) storage_s, sizeof(storage_s))
+			!= EXIT_SUCCESS) {
+		fail("storage");
+	}
+
 	snprintf((char*) motd, sizeof(motd), MOTD_STRING,
 			uptime_s,
 			loadavg_s,
 			memory_s,
-			pids_s);
+			pids_s,
+			storage_s);
 	puts(motd);
 	return EXIT_SUCCESS;
 }

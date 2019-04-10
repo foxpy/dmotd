@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/sysinfo.h>
+#include <sys/statvfs.h>
 
 #define PID_MAX_FILE "/proc/sys/kernel/pid_max"
 
@@ -89,5 +90,25 @@ int format_pids(char *dst, size_t len)
 
 	snprintf(dst, len, "%d/%ld [%d%%]",
 			info.procs, max_pid, used_percent);
+	return EXIT_SUCCESS;
+}
+
+int format_storage(char *dst, size_t len)
+{
+	struct statvfs stat;
+	fsblkcnt_t f_bused;
+	int8_t used_percent;
+
+	if (statvfs("/", &stat) == -1) {
+		perror("statvfs");
+		return -1;
+	}
+	f_bused = stat.f_blocks - stat.f_bfree;
+	used_percent = 100 * f_bused / stat.f_blocks;
+
+	snprintf(dst, len, "%ld/%ld GB [%d%%]",
+			stat.f_bsize * f_bused / 1024 / 1024 / 1024,
+			stat.f_bsize * stat.f_blocks / 1024 / 1024 / 1024,
+			used_percent);
 	return EXIT_SUCCESS;
 }
