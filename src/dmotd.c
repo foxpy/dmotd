@@ -10,6 +10,7 @@ int main(void)
 	char uptime_s[LINE_SIZE];
 	char loadavg_s[LINE_SIZE];
 	char memory_s[LINE_SIZE];
+	char pids_s[LINE_SIZE];
 
 	if (format_uptime((char*) uptime_s, sizeof(uptime_s))
 			!= EXIT_SUCCESS) {
@@ -29,10 +30,17 @@ int main(void)
 		return EXIT_FAILURE;
 	}
 
+	if (format_pids((char*) pids_s, sizeof(pids_s))
+			!= EXIT_SUCCESS) {
+		perror("format_processes");
+		return EXIT_FAILURE;
+	}
+
 	snprintf((char*) motd, sizeof(motd), MOTD_STRING,
 			uptime_s,
 			loadavg_s,
-			memory_s);
+			memory_s,
+			pids_s);
 	puts(motd);
 	return EXIT_SUCCESS;
 }

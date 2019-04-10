@@ -2,7 +2,11 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <time.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include <sys/sysinfo.h>
+
+#define PID_MAX_FILE "/proc/sys/kernel/pid_max"
 
 int format_uptime(char *dst, size_t len)
 {
@@ -56,5 +60,34 @@ int format_memory(char *dst, size_t len)
 	snprintf(dst, len, "%ld/%ld MB [%d%%]",
 			(info.totalram - info.freeram)/1024/1024,
 			info.totalram/1024/1024, used_percent);
+	return EXIT_SUCCESS;
+}
+
+int format_pids(char *dst, size_t len)
+{
+	struct sysinfo info;
+	int pid_max_fd;
+	char pid_max_s[32];
+	long max_pid;
+	int8_t used_percent;
+
+	pid_max_fd = open(PID_MAX_FILE, O_RDONLY);
+	if (pid_max_fd == -1) {
+		perror("open");
+		return -1;
+	}
+	if (read(pid_max_fd, pid_max_s, sizeof(pid_max_s)) == -1) {
+		perror("read");
+		return -1;
+	}
+	max_pid = atol(pid_max_s);
+
+	if (sysinfo(&info) != EXIT_SUCCESS) {
+		return -1;
+	}
+	used_percent = 100 * info.procs / max_pid;
+
+	snprintf(dst, len, "%d/%ld [%d%%]",
+			info.procs, max_pid, used_percent);
 	return EXIT_SUCCESS;
 }
