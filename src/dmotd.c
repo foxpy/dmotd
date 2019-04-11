@@ -15,6 +15,7 @@ int main(void)
 	char motd[LINES*LINE_SIZE];
 	char uptime_s[LINE_SIZE];
 	char loadavg_s[LINE_SIZE];
+	char users_s[LINE_SIZE];
 	char kernel_s[LINE_SIZE];
 	char memory_s[LINE_SIZE];
 	char swap_s[LINE_SIZE];
@@ -29,6 +30,11 @@ int main(void)
 	if (format_loadavg((char*) loadavg_s, sizeof(loadavg_s))
 			!= EXIT_SUCCESS) {
 		fail("loadavg");
+	}
+
+	if (format_users((char*) users_s, sizeof(users_s))
+			!= EXIT_SUCCESS) {
+		fail("users");
 	}
 
 	if (format_kernel((char*) kernel_s, sizeof(kernel_s))
@@ -59,6 +65,7 @@ int main(void)
 	snprintf((char*) motd, sizeof(motd), MOTD_STRING,
 			uptime_s,
 			loadavg_s,
+			users_s,
 			kernel_s,
 			memory_s,
 			swap_s,

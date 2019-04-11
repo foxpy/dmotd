@@ -7,6 +7,7 @@
 #include <sys/sysinfo.h>
 #include <sys/utsname.h>
 #include <sys/statvfs.h>
+#include <utmp.h>
 
 #define PID_MAX_FILE "/proc/sys/kernel/pid_max"
 
@@ -60,6 +61,26 @@ int format_kernel(char *dst, size_t len)
 
 	snprintf(dst, len, "%s",
 			name.release);
+	return EXIT_SUCCESS;
+}
+
+int format_users(char *dst, size_t len)
+{
+	int utmpfd;
+	unsigned int users = 0;
+	struct utmp utmp;
+
+	utmpfd = open(_PATH_UTMP, O_RDONLY);
+	if (utmpfd == -1) {
+		perror("open");
+		return -1;
+	}
+	while (read(utmpfd, &utmp, sizeof(utmp)) == sizeof(utmp)) {
+		if (*utmp.ut_name && *utmp.ut_line && *utmp.ut_line != '~')
+			++users;
+	}
+
+	snprintf(dst, len, "%d", users);
 	return EXIT_SUCCESS;
 }
 
