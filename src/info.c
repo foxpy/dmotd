@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/sysinfo.h>
+#include <sys/utsname.h>
 #include <sys/statvfs.h>
 
 #define PID_MAX_FILE "/proc/sys/kernel/pid_max"
@@ -45,6 +46,20 @@ int format_loadavg(char *dst, size_t len)
 			loadavg[0],
 			loadavg[1],
 			loadavg[2]);
+	return EXIT_SUCCESS;
+}
+
+int format_kernel(char *dst, size_t len)
+{
+	struct utsname name;
+
+	if (uname(&name) == -1) {
+		perror("uname");
+		return -1;
+	}
+
+	snprintf(dst, len, "%s",
+			name.release);
 	return EXIT_SUCCESS;
 }
 

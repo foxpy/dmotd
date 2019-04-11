@@ -12,5 +12,5 @@ WIP dynamic motd generator. Nuff said.
 - [x] Storage
 - [ ] Public IP
 - [ ] Logged users count
-- [ ] Kernel version
+- [x] Kernel version
 - [ ] Network total RX/TX stats

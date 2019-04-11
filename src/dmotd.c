@@ -15,6 +15,7 @@ int main(void)
 	char motd[LINES*LINE_SIZE];
 	char uptime_s[LINE_SIZE];
 	char loadavg_s[LINE_SIZE];
+	char kernel_s[LINE_SIZE];
 	char memory_s[LINE_SIZE];
 	char swap_s[LINE_SIZE];
 	char pids_s[LINE_SIZE];
@@ -30,6 +31,11 @@ int main(void)
 		fail("loadavg");
 	}
 
+	if (format_kernel((char*) kernel_s, sizeof(kernel_s))
+			!= EXIT_SUCCESS) {
+		fail("kernel");
+	}
+
 	if (format_memory((char*) memory_s, sizeof(memory_s))
 			!= EXIT_SUCCESS) {
 		fail("memory");
@@ -37,7 +43,7 @@ int main(void)
 
 	if (format_swap((char*) swap_s, sizeof(swap_s))
 			!= EXIT_SUCCESS) {
-			fail("swap");
+		fail("swap");
 	}
 
 	if (format_pids((char*) pids_s, sizeof(pids_s))
@@ -53,6 +59,7 @@ int main(void)
 	snprintf((char*) motd, sizeof(motd), MOTD_STRING,
 			uptime_s,
 			loadavg_s,
+			kernel_s,
 			memory_s,
 			swap_s,
 			pids_s,
