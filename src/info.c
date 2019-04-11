@@ -81,6 +81,7 @@ int format_users(char *dst, size_t len)
 	}
 
 	snprintf(dst, len, "%d", users);
+	close(utmpfd);
 	return EXIT_SUCCESS;
 }
 
