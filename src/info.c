@@ -109,6 +109,10 @@ int format_swap(char *dst, size_t len)
 	if (sysinfo(&info) != EXIT_SUCCESS) {
 		return -1;
 	}
+	if (info.totalswap == 0) {
+		snprintf(dst, len, "%s", "none");
+		return EXIT_SUCCESS;
+	}
 
 	used_percent = (100 * (info.totalswap - info.freeswap)) / info.totalswap;
 	snprintf(dst, len, "%ld/%ld MB [%d%%]",
