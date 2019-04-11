@@ -64,6 +64,22 @@ int format_memory(char *dst, size_t len)
 	return EXIT_SUCCESS;
 }
 
+int format_swap(char *dst, size_t len)
+{
+	struct sysinfo info;
+	int8_t used_percent;
+
+	if (sysinfo(&info) != EXIT_SUCCESS) {
+		return -1;
+	}
+
+	used_percent = (100 * (info.totalswap - info.freeswap)) / info.totalswap;
+	snprintf(dst, len, "%ld/%ld MB [%d%%]",
+			(info.totalswap - info.freeswap)/1024/1024,
+			info.totalswap/1024/1024, used_percent);
+	return EXIT_SUCCESS;
+}
+
 int format_pids(char *dst, size_t len)
 {
 	struct sysinfo info;

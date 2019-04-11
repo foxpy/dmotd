@@ -16,6 +16,7 @@ int main(void)
 	char uptime_s[LINE_SIZE];
 	char loadavg_s[LINE_SIZE];
 	char memory_s[LINE_SIZE];
+	char swap_s[LINE_SIZE];
 	char pids_s[LINE_SIZE];
 	char storage_s[LINE_SIZE];
 
@@ -34,6 +35,11 @@ int main(void)
 		fail("memory");
 	}
 
+	if (format_swap((char*) swap_s, sizeof(swap_s))
+			!= EXIT_SUCCESS) {
+			fail("swap");
+	}
+
 	if (format_pids((char*) pids_s, sizeof(pids_s))
 			!= EXIT_SUCCESS) {
 		fail("pids");
@@ -48,6 +54,7 @@ int main(void)
 			uptime_s,
 			loadavg_s,
 			memory_s,
+			swap_s,
 			pids_s,
 			storage_s);
 	puts(motd);

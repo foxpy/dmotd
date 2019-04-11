@@ -7,7 +7,7 @@ WIP dynamic motd generator. Nuff said.
 - [x] Uptime
 - [x] Loadavg
 - [x] RAM
-- [ ] Swap
+- [x] Swap
 - [x] Used PIDs
 - [x] Storage
 - [ ] Public IP
