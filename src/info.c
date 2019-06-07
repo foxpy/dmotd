@@ -88,7 +88,7 @@ int format_users(char *dst, size_t len)
 int format_memory(char *dst, size_t len)
 {
 	struct sysinfo info;
-	int8_t used_percent;
+	int_fast8_t used_percent;
 
 	if (sysinfo(&info) != EXIT_SUCCESS) {
 		return -1;
@@ -104,7 +104,7 @@ int format_memory(char *dst, size_t len)
 int format_swap(char *dst, size_t len)
 {
 	struct sysinfo info;
-	int8_t used_percent;
+	int_fast8_t used_percent;
 
 	if (sysinfo(&info) != EXIT_SUCCESS) {
 		return -1;
@@ -127,7 +127,7 @@ int format_pids(char *dst, size_t len)
 	int pid_max_fd;
 	char pid_max_s[32];
 	long max_pid;
-	int8_t used_percent;
+	int_fast8_t used_percent;
 
 	pid_max_fd = open(PID_MAX_FILE, O_RDONLY);
 	if (pid_max_fd == -1) {
@@ -154,7 +154,7 @@ int format_storage(char *dst, size_t len)
 {
 	struct statvfs stat;
 	fsblkcnt_t f_bused;
-	int8_t used_percent;
+	int_fast8_t used_percent;
 
 	if (statvfs("/", &stat) == -1) {
 		perror("statvfs");
