@@ -116,9 +116,10 @@ int format_memory(char *dst, size_t len)
 	}
 
 	used_percent = (100 * (total_ram - free_ram)) / total_ram;
-	snprintf(dst, len, "%d/%d MB [%d%%]",
+	snprintf(dst, len, "[%d%%] %d/%d MB",
+			used_percent,
 			(total_ram - free_ram),
-			total_ram, used_percent);
+			total_ram);
 	return EXIT_SUCCESS;
 }
 
@@ -135,10 +136,12 @@ int format_swap(char *dst, size_t len)
 		return EXIT_SUCCESS;
 	}
 
-	used_percent = (100 * (info.totalswap - info.freeswap)) / info.totalswap;
-	snprintf(dst, len, "%ld/%ld MB [%d%%]",
+	used_percent = (100 * (info.totalswap - info.freeswap)) /
+		info.totalswap;
+	snprintf(dst, len, "[%d%%] %ld/%ld MB",
+			used_percent,
 			(info.totalswap - info.freeswap)/1024/1024,
-			info.totalswap/1024/1024, used_percent);
+			info.totalswap/1024/1024);
 	return EXIT_SUCCESS;
 }
 
@@ -166,8 +169,8 @@ int format_pids(char *dst, size_t len)
 	}
 	used_percent = 100 * info.procs / max_pid;
 
-	snprintf(dst, len, "%d/%ld [%d%%]",
-			info.procs, max_pid, used_percent);
+	snprintf(dst, len, "[%d%%] %d/%ld",
+			used_percent, info.procs, max_pid);
 	return EXIT_SUCCESS;
 }
 
@@ -184,9 +187,9 @@ int format_storage(char *dst, size_t len)
 	f_bused = stat.f_blocks - stat.f_bfree;
 	used_percent = 100 * f_bused / stat.f_blocks;
 
-	snprintf(dst, len, "%ld/%ld GB [%d%%]",
+	snprintf(dst, len, "[%d%%] %ld/%ld GB",
+			used_percent,
 			stat.f_bsize * f_bused / 1024 / 1024 / 1024,
-			stat.f_bsize * stat.f_blocks / 1024 / 1024 / 1024,
-			used_percent);
+			stat.f_bsize * stat.f_blocks / 1024 / 1024 / 1024);
 	return EXIT_SUCCESS;
 }
