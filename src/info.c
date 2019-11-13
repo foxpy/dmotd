@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 #include <time.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -10,6 +11,9 @@
 #include <utmp.h>
 
 #define PID_MAX_FILE "/proc/sys/kernel/pid_max"
+#define MEMINFO_FILE "/proc/meminfo"
+#define MEMAVAIL_STR "MemAvailable:"
+#define MEMTOTAL_STR "MemTotal:"
 
 int format_uptime(char *dst, size_t len)
 {
@@ -83,17 +87,38 @@ int format_users(char *dst, size_t len)
 
 int format_memory(char *dst, size_t len)
 {
-	struct sysinfo info;
+	unsigned free_ram, total_ram;
 	int_fast8_t used_percent;
+	FILE *meminfo;
+	char *line;
+	size_t rlen;
+	ssize_t nread;
 
-	if (sysinfo(&info) != EXIT_SUCCESS) {
+	meminfo = fopen(MEMINFO_FILE, "r");
+	if (meminfo == NULL) {
+		perror("open");
+		return -1;
+	}
+	rlen = 0;
+	while ((nread = getline(&line, &rlen, meminfo)) != -1) {
+		if (!strncmp(line, MEMTOTAL_STR, sizeof(MEMTOTAL_STR)-1)) {
+			while (line[0] < '0' || line[0] > '9') ++line;
+			total_ram = atoi(line)/1024;
+		}
+		if (!strncmp(line, MEMAVAIL_STR, sizeof(MEMAVAIL_STR)-1)) {
+			while (line[0] < '0' || line[0] > '9') ++line;
+			free_ram = atoi(line)/1024;
+		}
+	}
+	if (!free_ram || !total_ram) {
+		printf("%u/%u", free_ram, total_ram);
 		return -1;
 	}
 
-	used_percent = (100 * (info.totalram - info.freeram)) / info.totalram;
-	snprintf(dst, len, "%ld/%ld MB [%d%%]",
-			(info.totalram - info.freeram)/1024/1024,
-			info.totalram/1024/1024, used_percent);
+	used_percent = (100 * (total_ram - free_ram)) / total_ram;
+	snprintf(dst, len, "%d/%d MB [%d%%]",
+			(total_ram - free_ram),
+			total_ram, used_percent);
 	return EXIT_SUCCESS;
 }
 
