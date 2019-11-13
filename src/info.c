@@ -66,22 +66,18 @@ int format_kernel(char *dst, size_t len)
 
 int format_users(char *dst, size_t len)
 {
-	int utmpfd;
-	unsigned int users = 0;
-	struct utmp utmp;
+	unsigned users;
+	struct utmp *utmps;
 
-	utmpfd = open(_PATH_UTMP, O_RDONLY);
-	if (utmpfd == -1) {
-		perror("open");
-		return -1;
-	}
-	while (read(utmpfd, &utmp, sizeof(utmp)) == sizeof(utmp)) {
-		if (*utmp.ut_name && *utmp.ut_line && *utmp.ut_line != '~')
+	users = 0;
+	setutent();
+	while ((utmps = getutent()))
+		if ((utmps->ut_type == USER_PROCESS) &&
+		    (utmps->ut_name[0] != '\0'))
 			++users;
-	}
+	endutent();
 
 	snprintf(dst, len, "%d", users);
-	close(utmpfd);
 	return EXIT_SUCCESS;
 }
 
