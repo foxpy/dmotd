@@ -110,10 +110,7 @@ int format_memory(char *dst, size_t len)
 			free_ram = atoi(line)/1024;
 		}
 	}
-	if (!free_ram || !total_ram) {
-		printf("%u/%u", free_ram, total_ram);
-		return -1;
-	}
+	if (!free_ram || !total_ram) return -1;
 
 	used_percent = (100 * (total_ram - free_ram)) / total_ram;
 	snprintf(dst, len, "[%d%%] %d/%d MB",
