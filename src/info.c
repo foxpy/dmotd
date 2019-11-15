@@ -3,8 +3,6 @@
 #include <stdint.h>
 #include <string.h>
 #include <time.h>
-#include <unistd.h>
-#include <fcntl.h>
 #include <sys/sysinfo.h>
 #include <sys/utsname.h>
 #include <sys/statvfs.h>
@@ -96,7 +94,7 @@ int format_memory(char *dst, size_t len)
 
 	meminfo = fopen(MEMINFO_FILE, "r");
 	if (meminfo == NULL) {
-		perror("open");
+		perror("fopen");
 		return -1;
 	}
 	rlen = 0;
@@ -110,6 +108,7 @@ int format_memory(char *dst, size_t len)
 			free_ram = atoi(line)/1024;
 		}
 	}
+	fclose(meminfo);
 	if (!free_ram || !total_ram) return -1;
 
 	used_percent = (100 * (total_ram - free_ram)) / total_ram;
@@ -145,20 +144,18 @@ int format_swap(char *dst, size_t len)
 int format_pids(char *dst, size_t len)
 {
 	struct sysinfo info;
-	int pid_max_fd;
+	FILE *pid_max_f;
 	char pid_max_s[32];
 	long max_pid;
 	int_fast8_t used_percent;
 
-	pid_max_fd = open(PID_MAX_FILE, O_RDONLY);
-	if (pid_max_fd == -1) {
-		perror("open");
+	pid_max_f = fopen(PID_MAX_FILE, "r");
+	if (pid_max_f == NULL) {
+		perror("fopen");
 		return -1;
 	}
-	if (read(pid_max_fd, pid_max_s, sizeof(pid_max_s)) == -1) {
-		perror("read");
-		return -1;
-	}
+	fread(pid_max_s, sizeof(char), sizeof(pid_max_s), pid_max_f);
+	fclose(pid_max_f);
 	max_pid = atol(pid_max_s);
 
 	if (sysinfo(&info) != EXIT_SUCCESS) {
