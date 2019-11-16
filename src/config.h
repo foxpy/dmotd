@@ -11,5 +11,5 @@
 	"Kernel:             %s\n" \
 	"Used memory:        %s\n" \
 	"Used swap:          %s\n" \
-	"Total PIDs:         %s\n" \
+	"Used PIDs:          %s\n" \
 	"Root usage:         %s"
