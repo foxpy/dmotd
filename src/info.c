@@ -149,14 +149,13 @@ int format_pids(char *dst, size_t len)
 	long max_pid;
 	int_fast8_t used_percent;
 
-	pid_max_f = fopen(PID_MAX_FILE, "r");
-	if (pid_max_f == NULL) {
+	if ((pid_max_f = fopen(PID_MAX_FILE, "r")) == NULL) {
 		perror("fopen");
 		return -1;
 	}
-	fread(pid_max_s, sizeof(char), sizeof(pid_max_s), pid_max_f);
+	if (fread(pid_max_s, sizeof(char), sizeof(pid_max_s), pid_max_f))
+		max_pid = atol(pid_max_s);
 	fclose(pid_max_f);
-	max_pid = atol(pid_max_s);
 
 	if (sysinfo(&info) != EXIT_SUCCESS) {
 		return -1;
