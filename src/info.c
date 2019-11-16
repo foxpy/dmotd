@@ -9,6 +9,7 @@
 #include <utmp.h>
 
 #define PID_MAX_FILE "/proc/sys/kernel/pid_max"
+#define LOADAVG_FILE "/proc/loadavg"
 #define MEMINFO_FILE "/proc/meminfo"
 #define MEMAVAIL_STR "MemAvailable:"
 #define MEMTOTAL_STR "MemTotal:"
@@ -39,16 +40,22 @@ int format_uptime(char *dst, size_t len)
 
 int format_loadavg(char *dst, size_t len)
 {
-	double loadavg[3];
+	FILE *load_avg_f;
+	char load_avg_s[32];
+	size_t i;
+	uint_fast8_t space;
 
-	if (getloadavg(loadavg, 3) != sizeof(loadavg)/sizeof(double)) {
+	if ((load_avg_f = fopen(LOADAVG_FILE, "r")) == NULL) {
+		perror("fopen");
 		return -1;
 	}
+	if (fread(load_avg_s, sizeof(char), 32, load_avg_f)) {
+		i = space = 0;
+		while (space < 3) if (load_avg_s[++i] == ' ') ++space;
+		load_avg_s[i] = '\0';
+	}
 
-	snprintf(dst, len, "%.2f, %.2f, %.2f",
-			loadavg[0],
-			loadavg[1],
-			loadavg[2]);
+	snprintf(dst, len, "%s", load_avg_s);
 	return EXIT_SUCCESS;
 }
 
