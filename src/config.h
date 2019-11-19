@@ -12,4 +12,4 @@
 	"Used memory:        %s\n" \
 	"Used swap:          %s\n" \
 	"Used PIDs:          %s\n" \
-	"Root usage:         %s"
+	"Used storage on /:  %s"
