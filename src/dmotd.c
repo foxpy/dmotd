@@ -2,7 +2,18 @@
 #include <stdlib.h>
 
 #include "info.h"
-#include "config.h"
+
+#define LINE_SIZE 81
+#define LINES 8
+#define MOTD_STRING \
+	"Uptime:             %s\n" \
+	"Load average:       %s\n" \
+	"Users:              %s\n" \
+	"Kernel:             %s\n" \
+	"Used memory:        %s\n" \
+	"Used swap:          %s\n" \
+	"Used PIDs:          %s\n" \
+	"Used storage on /:  %s"
 
 void fail(char* func)
 {
