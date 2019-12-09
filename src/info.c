@@ -8,11 +8,7 @@
 #include <sys/statvfs.h>
 #include <utmp.h>
 
-#define PID_MAX_FILE "/proc/sys/kernel/pid_max"
-#define LOADAVG_FILE "/proc/loadavg"
-#define MEMINFO_FILE "/proc/meminfo"
-#define MEMAVAIL_STR "MemAvailable:"
-#define MEMTOTAL_STR "MemTotal:"
+#include "info.h"
 
 int format_uptime(char *dst, size_t len)
 {
