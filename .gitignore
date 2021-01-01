@@ -1,4 +1,5 @@
-bin/
+build/
+.idea/
 *.o
 *.out
 .gdb_history
