@@ -24,14 +24,10 @@ int main(void)
     char storage_s[LINE_SIZE];
 
     qc_err* err = qc_err_new();
-
     if (motd_uptime(sizeof(uptime_s), uptime_s, err) == QC_FAILURE) {
         qc_err_fatal(err, "Failed to get uptime");
-    }
-
-    if (format_loadavg((char*) loadavg_s, sizeof(loadavg_s))
-        != EXIT_SUCCESS) {
-        fail("loadavg");
+    } else if (motd_loadavg(sizeof(loadavg_s), loadavg_s, err) == QC_FAILURE) {
+        qc_err_fatal(err, "Failed to get load average");
     }
 
     if (format_users((char*) users_s, sizeof(users_s))

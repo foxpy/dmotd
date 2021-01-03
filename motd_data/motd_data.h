@@ -13,7 +13,7 @@
     "Used storage on /:  %s"
 
 qc_result motd_uptime(size_t len, char dst[static len], qc_err* err);
-int format_loadavg(char *dst, size_t len);
+qc_result motd_loadavg(size_t len, char dst[static len], qc_err* err);
 int format_users(char *dst, size_t len);
 int format_kernel(char *dst, size_t len);
 int format_memory(char *dst, size_t len);

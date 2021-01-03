@@ -2,39 +2,16 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-#include <time.h>
 #include <sys/sysinfo.h>
 #include <sys/utsname.h>
 #include <sys/statvfs.h>
 #include <utmp.h>
-#include <errno.h>
 #include "motd_data.h"
 
 #define PID_MAX_FILE "/proc/sys/kernel/pid_max"
-#define LOADAVG_FILE "/proc/loadavg"
 #define MEMINFO_FILE "/proc/meminfo"
 #define MEMAVAIL_STR "MemAvailable:"
 #define MEMTOTAL_STR "MemTotal:"
-
-int format_loadavg(char *dst, size_t len) {
-    FILE *load_avg_f;
-    char load_avg_s[32];
-    size_t i;
-    uint_fast8_t space;
-
-    if ((load_avg_f = fopen(LOADAVG_FILE, "r")) == NULL) {
-        perror("fopen");
-        return -1;
-    }
-    if (fread(load_avg_s, sizeof(char), 32, load_avg_f)) {
-        i = space = 0;
-        while (space < 3) if (load_avg_s[++i] == ' ') ++space;
-        load_avg_s[i] = '\0';
-    }
-
-    snprintf(dst, len, "%s", load_avg_s);
-    return EXIT_SUCCESS;
-}
 
 int format_kernel(char *dst, size_t len) {
     struct utsname name;
