@@ -4,6 +4,7 @@ add_library(MotdData
     motd_users.c
     motd_kernel.c
     motd_memory.c
+    motd_swap.c
     info.c
 )
 target_link_libraries(MotdData PUBLIC qc)

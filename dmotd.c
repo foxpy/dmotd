@@ -34,11 +34,8 @@ int main(void)
         qc_err_fatal(err, "Failed to get kernel version");
     } else if (motd_memory(sizeof(memory_s), memory_s, err) == QC_FAILURE) {
         qc_err_fatal(err, "Failed to get RAM info");
-    }
-
-    if (format_swap((char*) swap_s, sizeof(swap_s))
-        != EXIT_SUCCESS) {
-        fail("swap");
+    } else if (motd_swap(sizeof(swap_s), swap_s, err) == QC_FAILURE) {
+        qc_err_fatal(err, "Failed to get swap info");
     }
 
     if (format_pids((char*) pids_s, sizeof(pids_s))

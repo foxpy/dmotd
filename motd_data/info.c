@@ -9,27 +9,6 @@
 
 #define PID_MAX_FILE "/proc/sys/kernel/pid_max"
 
-int format_swap(char *dst, size_t len) {
-    struct sysinfo info;
-    int_fast8_t used_percent;
-
-    if (sysinfo(&info) != EXIT_SUCCESS) {
-        return -1;
-    }
-    if (info.totalswap == 0) {
-        snprintf(dst, len, "%s", "none");
-        return EXIT_SUCCESS;
-    }
-
-    used_percent = (100 * (info.totalswap - info.freeswap)) /
-                   info.totalswap;
-    snprintf(dst, len, "[%3d%%] %ld/%ld MB",
-             used_percent,
-             (info.totalswap - info.freeswap) / 1024 / 1024,
-             info.totalswap / 1024 / 1024);
-    return EXIT_SUCCESS;
-}
-
 int format_pids(char *dst, size_t len) {
     struct sysinfo info;
     FILE *pid_max_f;
