@@ -36,18 +36,11 @@ int main(void)
         qc_err_fatal(err, "Failed to get RAM info");
     } else if (motd_swap(sizeof(swap_s), swap_s, err) == QC_FAILURE) {
         qc_err_fatal(err, "Failed to get swap info");
+    } else if (motd_pids(sizeof(pids_s), pids_s, err) == QC_FAILURE) {
+        qc_err_fatal(err, "Failed to get number of PIDS");
+    } else if (motd_storage(sizeof(storage_s), storage_s, err) == QC_FAILURE) {
+        qc_err_fatal(err, "Failed to get storage info");
     }
-
-    if (format_pids((char*) pids_s, sizeof(pids_s))
-        != EXIT_SUCCESS) {
-        fail("pids");
-    }
-
-    if (format_storage((char*) storage_s, sizeof(storage_s))
-        != EXIT_SUCCESS) {
-        fail("storage");
-    }
-
     qc_err_free(err);
 
     snprintf((char*) motd, sizeof(motd), MOTD_STRING,
