@@ -3,10 +3,19 @@
 #include <qc.h>
 #include "motd_data.h"
 
-#define LINES 8
-#define LINE_SIZE 81
+static char const* motd_string =
+    "Uptime:             %s\n"
+    "Load average:       %s\n"
+    "Users:              %s\n"
+    "Kernel:             %s\n"
+    "Used memory:        %s\n"
+    "Used swap:          %s\n"
+    "Used PIDs:          %s\n"
+    "Used storage on /:  %s\n"
+;
 
 int main(void) {
+#   define LINE_SIZE 81
     char uptime_s[LINE_SIZE];
     char loadavg_s[LINE_SIZE];
     char users_s[LINE_SIZE];
@@ -36,6 +45,6 @@ int main(void) {
     }
     qc_err_free(err);
 
-    printf(MOTD_STRING, uptime_s, loadavg_s, users_s, kernel_s, memory_s, swap_s, pids_s, storage_s);
+    printf(motd_string, uptime_s, loadavg_s, users_s, kernel_s, memory_s, swap_s, pids_s, storage_s);
     return EXIT_SUCCESS;
 }

@@ -7,7 +7,6 @@ add_library(MotdData
     motd_swap.c
     motd_pids.c
     motd_storage.c
-    info.c
 )
 target_link_libraries(MotdData PUBLIC qc)
 target_include_directories(MotdData INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
