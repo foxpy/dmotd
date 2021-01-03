@@ -3,7 +3,6 @@
 #include <stdint.h>
 #include <string.h>
 #include <sys/sysinfo.h>
-#include <sys/utsname.h>
 #include <sys/statvfs.h>
 #include <utmp.h>
 #include "motd_data.h"
@@ -12,19 +11,6 @@
 #define MEMINFO_FILE "/proc/meminfo"
 #define MEMAVAIL_STR "MemAvailable:"
 #define MEMTOTAL_STR "MemTotal:"
-
-int format_kernel(char *dst, size_t len) {
-    struct utsname name;
-
-    if (uname(&name) == -1) {
-        perror("uname");
-        return -1;
-    }
-
-    snprintf(dst, len, "%s",
-             name.release);
-    return EXIT_SUCCESS;
-}
 
 int format_memory(char *dst, size_t len) {
     unsigned free_ram, total_ram;

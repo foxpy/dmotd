@@ -30,11 +30,8 @@ int main(void)
         qc_err_fatal(err, "Failed to get load average");
     } else if (motd_users(sizeof(users_s), users_s, err) == QC_FAILURE) {
         qc_err_fatal(err, "Failed to get number of users");
-    }
-
-    if (format_kernel((char*) kernel_s, sizeof(kernel_s))
-        != EXIT_SUCCESS) {
-        fail("kernel");
+    } else if (motd_kernel(sizeof(kernel_s), kernel_s, err) == QC_FAILURE) {
+        qc_err_fatal(err, "Failed to get kernel version");
     }
 
     if (format_memory((char*) memory_s, sizeof(memory_s))
