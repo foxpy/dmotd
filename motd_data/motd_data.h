@@ -10,7 +10,7 @@
     "Used memory:        %s\n" \
     "Used swap:          %s\n" \
     "Used PIDs:          %s\n" \
-    "Used storage on /:  %s"
+    "Used storage on /:  %s\n"
 
 qc_result motd_uptime(size_t len, char dst[static len], qc_err* err);
 qc_result motd_loadavg(size_t len, char dst[static len], qc_err* err);

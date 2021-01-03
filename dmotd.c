@@ -1,19 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <qc.h>
 #include "motd_data.h"
 
 #define LINES 8
 #define LINE_SIZE 81
 
-void fail(char* func)
-{
-    fprintf(stderr, "format_%s: Failed to get %s.\n", func, func);
-    exit(EXIT_FAILURE);
-}
-
-int main(void)
-{
-    char motd[LINES*LINE_SIZE];
+int main(void) {
     char uptime_s[LINE_SIZE];
     char loadavg_s[LINE_SIZE];
     char users_s[LINE_SIZE];
@@ -43,15 +36,6 @@ int main(void)
     }
     qc_err_free(err);
 
-    snprintf((char*) motd, sizeof(motd), MOTD_STRING,
-             uptime_s,
-             loadavg_s,
-             users_s,
-             kernel_s,
-             memory_s,
-             swap_s,
-             pids_s,
-             storage_s);
-    puts(motd);
+    printf(MOTD_STRING, uptime_s, loadavg_s, users_s, kernel_s, memory_s, swap_s, pids_s, storage_s);
     return EXIT_SUCCESS;
 }
