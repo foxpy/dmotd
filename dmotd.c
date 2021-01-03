@@ -23,9 +23,10 @@ int main(void)
     char pids_s[LINE_SIZE];
     char storage_s[LINE_SIZE];
 
-    if (format_uptime((char*) uptime_s, sizeof(uptime_s))
-        != EXIT_SUCCESS) {
-        fail("uptime");
+    qc_err* err = qc_err_new();
+
+    if (motd_uptime(uptime_s, sizeof(uptime_s), err) == QC_FAILURE) {
+        qc_err_fatal(err, "Failed to get uptime");
     }
 
     if (format_loadavg((char*) loadavg_s, sizeof(loadavg_s))
@@ -62,6 +63,8 @@ int main(void)
         != EXIT_SUCCESS) {
         fail("storage");
     }
+
+    qc_err_free(err);
 
     snprintf((char*) motd, sizeof(motd), MOTD_STRING,
              uptime_s,

@@ -1,5 +1,6 @@
 #pragma once
 #include <stddef.h>
+#include <qc.h>
 
 #define MOTD_STRING \
     "Uptime:             %s\n" \
@@ -11,7 +12,7 @@
     "Used PIDs:          %s\n" \
     "Used storage on /:  %s"
 
-int format_uptime(char *dst, size_t len);
+qc_result motd_uptime(size_t len, char dst[static len], qc_err* err);
 int format_loadavg(char *dst, size_t len);
 int format_users(char *dst, size_t len);
 int format_kernel(char *dst, size_t len);

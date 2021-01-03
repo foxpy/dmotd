@@ -7,6 +7,7 @@
 #include <sys/utsname.h>
 #include <sys/statvfs.h>
 #include <utmp.h>
+#include <errno.h>
 #include "motd_data.h"
 
 #define PID_MAX_FILE "/proc/sys/kernel/pid_max"
@@ -14,29 +15,6 @@
 #define MEMINFO_FILE "/proc/meminfo"
 #define MEMAVAIL_STR "MemAvailable:"
 #define MEMTOTAL_STR "MemTotal:"
-
-int format_uptime(char *dst, size_t len) {
-    struct sysinfo info;
-    struct tm *dt;
-
-    if (sysinfo(&info) != EXIT_SUCCESS) {
-        return -1;
-    }
-    dt = gmtime(&info.uptime);
-
-    // dt.tm_year starts from 1970, so we just subtract it
-    dt->tm_year -= 70;
-    // dt.tm_mday is 1-31, but we need to count the quantity of days
-    dt->tm_mday -= 1;
-
-    snprintf(dst, len, "%d months, %d days, %02d:%02d:%02d",
-             dt->tm_year * 12 + dt->tm_mon,
-             dt->tm_mday,
-             dt->tm_hour,
-             dt->tm_min,
-             dt->tm_sec);
-    return EXIT_SUCCESS;
-}
 
 int format_loadavg(char *dst, size_t len) {
     FILE *load_avg_f;

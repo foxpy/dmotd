@@ -1,2 +1,6 @@
-add_library(MotdData info.c)
+add_library(MotdData
+    motd_uptime.c
+    info.c
+)
+target_link_libraries(MotdData PUBLIC qc)
 target_include_directories(MotdData INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
