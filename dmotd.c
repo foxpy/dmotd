@@ -25,7 +25,7 @@ int main(void)
 
     qc_err* err = qc_err_new();
 
-    if (motd_uptime(uptime_s, sizeof(uptime_s), err) == QC_FAILURE) {
+    if (motd_uptime(sizeof(uptime_s), uptime_s, err) == QC_FAILURE) {
         qc_err_fatal(err, "Failed to get uptime");
     }
 
