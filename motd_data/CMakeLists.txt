@@ -1,6 +1,7 @@
 add_library(MotdData
     motd_uptime.c
     motd_loadavg.c
+    motd_users.c
     info.c
 )
 target_link_libraries(MotdData PUBLIC qc)

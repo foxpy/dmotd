@@ -28,11 +28,8 @@ int main(void)
         qc_err_fatal(err, "Failed to get uptime");
     } else if (motd_loadavg(sizeof(loadavg_s), loadavg_s, err) == QC_FAILURE) {
         qc_err_fatal(err, "Failed to get load average");
-    }
-
-    if (format_users((char*) users_s, sizeof(users_s))
-        != EXIT_SUCCESS) {
-        fail("users");
+    } else if (motd_users(sizeof(users_s), users_s, err) == QC_FAILURE) {
+        qc_err_fatal(err, "Failed to get number of users");
     }
 
     if (format_kernel((char*) kernel_s, sizeof(kernel_s))

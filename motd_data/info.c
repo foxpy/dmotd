@@ -26,22 +26,6 @@ int format_kernel(char *dst, size_t len) {
     return EXIT_SUCCESS;
 }
 
-int format_users(char *dst, size_t len) {
-    unsigned users;
-    struct utmp *utmps;
-
-    users = 0;
-    setutent();
-    while ((utmps = getutent()))
-        if ((utmps->ut_type == USER_PROCESS) &&
-            (utmps->ut_name[0] != '\0'))
-            ++users;
-    endutent();
-
-    snprintf(dst, len, "%d", users);
-    return EXIT_SUCCESS;
-}
-
 int format_memory(char *dst, size_t len) {
     unsigned free_ram, total_ram;
     int_fast8_t used_percent;
