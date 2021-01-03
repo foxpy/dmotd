@@ -32,11 +32,8 @@ int main(void)
         qc_err_fatal(err, "Failed to get number of users");
     } else if (motd_kernel(sizeof(kernel_s), kernel_s, err) == QC_FAILURE) {
         qc_err_fatal(err, "Failed to get kernel version");
-    }
-
-    if (format_memory((char*) memory_s, sizeof(memory_s))
-        != EXIT_SUCCESS) {
-        fail("memory");
+    } else if (motd_memory(sizeof(memory_s), memory_s, err) == QC_FAILURE) {
+        qc_err_fatal(err, "Failed to get RAM info");
     }
 
     if (format_swap((char*) swap_s, sizeof(swap_s))

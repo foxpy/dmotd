@@ -8,44 +8,6 @@
 #include "motd_data.h"
 
 #define PID_MAX_FILE "/proc/sys/kernel/pid_max"
-#define MEMINFO_FILE "/proc/meminfo"
-#define MEMAVAIL_STR "MemAvailable:"
-#define MEMTOTAL_STR "MemTotal:"
-
-int format_memory(char *dst, size_t len) {
-    unsigned free_ram, total_ram;
-    int_fast8_t used_percent;
-    FILE *meminfo;
-    char *line;
-    size_t rlen;
-    ssize_t nread;
-
-    meminfo = fopen(MEMINFO_FILE, "r");
-    if (meminfo == NULL) {
-        perror("fopen");
-        return -1;
-    }
-    rlen = 0;
-    while ((nread = getline(&line, &rlen, meminfo)) != -1) {
-        if (!strncmp(line, MEMTOTAL_STR, sizeof(MEMTOTAL_STR) - 1)) {
-            while (line[0] < '0' || line[0] > '9') ++line;
-            total_ram = atoi(line) / 1024;
-        }
-        if (!strncmp(line, MEMAVAIL_STR, sizeof(MEMAVAIL_STR) - 1)) {
-            while (line[0] < '0' || line[0] > '9') ++line;
-            free_ram = atoi(line) / 1024;
-        }
-    }
-    fclose(meminfo);
-    if (!free_ram || !total_ram) return -1;
-
-    used_percent = (100 * (total_ram - free_ram)) / total_ram;
-    snprintf(dst, len, "[%3d%%] %d/%d MB",
-             used_percent,
-             (total_ram - free_ram),
-             total_ram);
-    return EXIT_SUCCESS;
-}
 
 int format_swap(char *dst, size_t len) {
     struct sysinfo info;
